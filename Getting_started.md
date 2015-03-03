@@ -231,7 +231,7 @@ try to use unique profiles to avoid this buggy behaviour.
 
  * `set_command_status`, `set_desired_output`, `set_desired_err` mock the status, stdout and stderr of future `CAF::Process` call
 
-        <!-- language:perl -->
+    <!-- language: lang-perl -->
         set_desired_output("/usr/bin/command", "expected output");
 
 * `get_command` use to test if a  `CAF::Process` with exact commandline was called (and returns the `CAF::Process` instance).
