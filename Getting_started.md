@@ -3,7 +3,7 @@
 
 # git / github
 
-All quattor git repositories are part of the [quattor orgainization on GitHub][quattor_gh]
+All quattor git repositories are part of the [quattor organisation on GitHub][quattor_gh]
 
 [quattor_gh]: https://github.com/quattor
 
@@ -231,9 +231,9 @@ try to use unique profiles to avoid this buggy behaviour.
 
  * `set_command_status`, `set_desired_output`, `set_desired_err` mock the status, stdout and stderr of future `CAF::Process` call
 
-        ```perl
-        set_desired_output("/usr/bin/command", "expected output");
-        ```
+```perl
+set_desired_output("/usr/bin/command", "expected output");
+```
 
 * `get_command` use to test if a  `CAF::Process` with exact commandline was called (and returns the `CAF::Process` instance).
 
