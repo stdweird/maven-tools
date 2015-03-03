@@ -148,7 +148,7 @@ The [`build_all_repos`][build_all_repos] script tries to build all rpms for most
 Repositories that are not build include `panc` and the template repositories.
 
 One of it's features is that it resolves (or tries to) all dependencies (currenlty) using `yum`.
-(`sudo` rights are required for `yum` and `repoquery`; it is __NOT__ recommended to runs this as root)
+(`sudo` rights are required for `yum` and `repoquery`; it is __NOT__ recommended to run this as root)
 Perl dependencies that can't be installed via yum, are installed from `CPAN` (using `cpanm`).
 
 As it runs all unittests, the result of running the script is an environment where you can start developing.
@@ -222,7 +222,7 @@ $cmp->Configure($cfg);
 ok(!exists($cmp->{ERROR}), "Configure succeeds with any error logged");
 ```
 
-All methods of `Test::Quattor` are exported, so no need to use the load for that (in fact, you can't use it for that).
+All methods of `Test::Quattor` are exported, so no need to use the load for that (in fact, you can't use load for that).
 
 Caveat: reusing the object template for different tests can lead to race conditions (and thus failures),
 try to use unique profiles to avoid this buggy behaviour.
@@ -252,10 +252,26 @@ try to use unique profiles to avoid this buggy behaviour.
         ```perl
         command_history_reset();
         ok(command_history_ok(['pattern1','pattern2']), "message");
-         ``` 
+        ``` 
 
 #### CAF::FileWriter (Editor,Reader)
 
+ * `get_file` returns the instance that opened/modified a file
+        ```perl
+        my $fh = get_file("/some/path");
+        ```
+
+ * `set_file_contents` set the content a future `CAF::File*` instance will see
+        ```perl
+        set_file_contents("/some/path", $text);
+        ```
+
+* `set_caf_file_close_diff` mock the `CAF::File*->close()` return behaviour to return a true value if the content changed.
+   By default, this is false, and `close()` will return some garbage.
+   TODO: why is this not default true?
+        ```perl
+        set_caf_file_close_diff(1);
+        ```
 
 ### Test::MockModule
 
