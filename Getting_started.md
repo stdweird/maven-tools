@@ -183,14 +183,6 @@ The basic test module
 
 ### Test::Quattor
 
-Methods from 
-
-TODO: add sample component with examples
- * CAF::TextRender
- * compile profile
- * inject expected command output
-  * history_ok
-
 Quattor has it's own set of methods to help testing and mocking called [`Test::Quattor`][maven_tools_test_quattor_docs].
 
 [maven_tools_test_quattor_docs]: http://docs-test-maven-tools.readthedocs.org/en/latest/maven-tools/Quattor/
@@ -234,43 +226,45 @@ try to use unique profiles to avoid this buggy behaviour.
     <!-- language: lang-perl -->
         set_desired_output("/usr/bin/command", "expected output");
 
-* `get_command` use to test if a  `CAF::Process` with exact commandline was called (and returns the `CAF::Process` instance).
+ * `get_command` use to test if a  `CAF::Process` with exact commandline was called (and returns the `CAF::Process` instance).
 
-        ```perl
+    <!-- language: lang-perl -->
         ok(get_command("/usr/bin/someexecutable -l -s"), "Command was called");
-        ```
 
    or if you need to access the instance
 
-        ```perl
+    <!-- language: lang-perl -->
          my $procinstance = get_command("/usr/bin/someexecutable -l -s");
-        ```
 
  * `command_history_ok`, `command_history_reset` test ordered execution of `CAF::Process` instances
 
-        ```perl
+    <!-- language: lang-perl -->
         command_history_reset();
         ok(command_history_ok(['pattern1','pattern2']), "message");
-        ``` 
 
 #### CAF::FileWriter (Editor,Reader)
 
  * `get_file` returns the instance that opened/modified a file
-        ```perl
+
+
+    <!-- language: lang-perl -->
         my $fh = get_file("/some/path");
-        ```
+
 
  * `set_file_contents` set the content a future `CAF::File*` instance will see
-        ```perl
-        set_file_contents("/some/path", $text);
-        ```
 
-* `set_caf_file_close_diff` mock the `CAF::File*->close()` return behaviour to return a true value if the content changed.
+    <!-- language: lang-perl -->
+        set_file_contents("/some/path", $text);
+
+
+ * `set_caf_file_close_diff` mock the `CAF::File*->close()` return behaviour to return a true value if the content changed.
    By default, this is false, and `close()` will return some garbage.
-   TODO: why is this not default true?
-        ```perl
+
+    <!-- language: lang-perl -->
         set_caf_file_close_diff(1);
-        ```
+
+   TODO: why is this not default true?
+
 
 ### Test::MockModule
 
