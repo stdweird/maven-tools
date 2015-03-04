@@ -162,6 +162,7 @@ By default, `build_all_repos` installs everything in a `quattordev` subdirectory
 
 Running the script takes a while to complete. Best run it in a `screen` session and redirect the output to a logfile.
 (Best to check the `sudo` command upfront, as it can prompt for passsword, and thus block the script).
+
 TODO: check the sudo timeout (a.k.a when do the credentials expire).
 
 [build_all_repos]: https://raw.githubusercontent.com/quattor/release/master/src/scripts/build_all_repos.sh
