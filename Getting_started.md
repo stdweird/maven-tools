@@ -11,7 +11,7 @@ All quattor git repositories are part of the [quattor organisation on GitHub][qu
 ## Prerequisites
 
 1. An account on [GitHub][github]
-2. Join the quattor organization and `developer` team 
+2. Join the quattor organisation and `developer` team 
  * TODO: this is how current admin can add/invite new people [join_quattor]
 3. Join the [`quattor-devel` mailing list][quattor_devel_ml]
 
@@ -38,13 +38,14 @@ TODO: add urls to git tutorials
 6. Push you changes to your fork (i.e. to `origin`)
  * Do not push to `upstream`
 7. Run the unittests
+ * Add new ones to cover your changes (or refine existing ones)
 8. Open a pull request (PR)
- * Meaningful title; title will be part of teh relase notes
+ * Meaningful title; title will be part of the relase notes
   * For `configuration-modules` repository: start the title with the component that is being modified
-   * When more then one component is modified, describe the general work in the titel;
+   * When more then one component is modified, describe the general work in the title;
      the commit messages should have the component names.
  * Set `milestone` (i.e. the release you want this merged in)
-  * Set a realistic milestone, e.g. ff the PR is not urgent or not finished
+  * Set a realistic milestone, e.g. if the PR is not urgent or not finished
     or you have no time to follow up, you might want to pick later milestone.
  * Set `assignee` to yourself
 9. The initial PR will trigger a [jenkins][quattor_jenkins] build of the unittests
@@ -53,18 +54,12 @@ TODO: add urls to git tutorials
 11. Every 2 months, a release is made by the release manager that will contain your changes
  * Only for severe regressions / bugs, the release manager might consider an intermediate
    release to address the specific issue.
-   To start using your new code, you best
+ * To start using your new code, you can make your own `package` and upload it to your own repository
+  * Best to add a separate `testing` yum repository (no snapshots)
+   * This repository should be empty most of the time, but you can put your self-built packages there
+     until the new release is out that conatins your changes.
 
 [quattor_jenkins]: https://jenkins1.ugent.be/view/Quattor/
-
-## Adding new component in configuration-modules or AII
-
-TODO: more info
-
-New components should be added to the parent `pom.xml` in order to be part of the release.
-
-Copy initial `pom.xml` from other component/hook, change the project.
-
 
 ## Maven
 
@@ -77,9 +72,10 @@ All source code and unittests are kept under the `src` subdir.
  * `src/test/resources` for pan templates that are used with the unittests
  * metaconfig services are an exception
 
-During testing, a `target` subdir is created by the maven tool
+During testing, a `target` subdir is created by the maven tool (and removed with `mvn clean`).
 
-The process is steered via a `pom.xml` file, that is derived from a quattor maven atrifact.  
+The process is steered via a `pom.xml` file, that is derived from a quattor maven atrifact.
+
 These pom files require few changes, but typical ones are:
  * add developer / maintainer
  * set the project name (e.g. in case of a new component)
@@ -98,6 +94,8 @@ Most common commands are
  will create the rpm (and tarball).
  * `package` also runs the tests, and also here it is advised to use `mvn clean package`
 
+If you want more logging, you can set `-Dprove.args=-v` (the `verbose` flag of `prove`)
+
 # Unittests
 
 All quattor projects have unittests. These are run via the `mvn test` command, and run the perl
@@ -109,6 +107,10 @@ include paths are already set, except for any dependencies.
 `prove` only runs files with a `.t` suffix; any other files are ignored. This allows you to create
 any helper modules for the unittests themself under the `src/test/perl` directory (`src/test/perl`
 is added to the perl `@INC` via the `prove` commandline).
+
+The tests run the modules that are preprocessed by `mvn` in the `target/lib/perl` directory.
+The preprocessing does e.g. the templating of the `%{author}`. It also means that any perl messages
+that have a line number in them, are from the templated files (so there's some offset to take into account).
 
 If you want to run a single unittest, add `-Dunittest=name_of_test.t` to the `mvn` commandline. 
 
@@ -164,6 +166,8 @@ Running the script takes a while to complete. Best run it in a `screen` session 
 (Best to check the `sudo` command upfront, as it can prompt for passsword, and thus block the script).
 
 TODO: check the sudo timeout (a.k.a when do the credentials expire).
+
+TODO: use the `source $DEST/env.sh` to set initial PERL5LIB 
 
 [build_all_repos]: https://raw.githubusercontent.com/quattor/release/master/src/scripts/build_all_repos.sh
 
@@ -243,6 +247,11 @@ try to use unique profiles to avoid this buggy behaviour.
         command_history_reset();
         ok(command_history_ok(['pattern1','pattern2']), "message");
 
+* additional logging environment variables
+  * `QUATTOR_TEST_LOG_CMD=1` log each command that is run via CAF::Process
+  * `QUATTOR_TEST_LOG_CMD_MISSING=1` reports that a process wanted output but non was set via the
+    `set_desired_output`
+ 
 #### CAF::FileWriter (Editor,Reader)
 
  * `get_file` returns the instance that opened/modified a file
@@ -284,7 +293,7 @@ If you then initialise the component, any calls to the `do_something` method wil
 return the reference to the array `(1, 2, 3)`.
 
 `Test::Quattor` provides a mocked version of a number of `CAF` modules and their methods,
-so you should not mock these yourself.
+there is typically no need to not mock these yourself.
 
 Caveat: there are a few perl builtins that can't be mocked, esp. tests like `-f $filename`.
 If you want to test and mock this sort of calls, it is best if you define a short private method in your code like
@@ -310,6 +319,16 @@ $mock->mock('_test_file', sub () {
     return $ans;
 }
 ```
+
+## Adding new component in configuration-modules or AII
+
+TODO: more info
+
+New components should be added to the parent `pom.xml` in order to be part of the release.
+
+Copy initial `pom.xml` from other component/hook, change the project.
+
+
 
 # Known issues
 
